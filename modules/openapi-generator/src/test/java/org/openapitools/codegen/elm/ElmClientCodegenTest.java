@@ -95,6 +95,28 @@ public class ElmClientCodegenTest {
         Assert.assertEquals(operationId, "call200response");
     }
 
+    @Test(description = "decimal is converted to Float")
+    public void decimalIsConvertedToFloat() throws Exception {
+        final ElmClientCodegen codegen = new ElmClientCodegen();
+
+        Schema schema = new Schema().addProperty("amount", new StringSchema().format("number"));
+
+        OpenAPI openApi = TestUtils.createOpenAPIWithOneSchema("test", schema);
+
+        codegen.setOpenAPI(openApi);
+        final CodegenModel cm1 = codegen.fromModel("sample", schema);
+
+        Assert.assertEquals(cm1.vars.get(0).dataType, "Float");
+    }
+
+    @Test(description = "record field starting with number should be prefixed")
+    public void recordFieldStartingWithNumberShouldBePrefixed() throws Exception {
+        final ElmClientCodegen codegen = new ElmClientCodegen();
+
+        String modelName = codegen.toVarName("123list");
+        Assert.assertEquals(modelName, "f123list");
+    }
+
     @Test(description = "type starting with number is prefixed correctly")
     public void typeStartingWithNumbersArePrefixedCorrectly() throws Exception {
         final ElmClientCodegen codegen = new ElmClientCodegen();
