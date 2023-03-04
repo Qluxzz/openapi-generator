@@ -217,8 +217,19 @@ public class ElmClientCodegen extends DefaultCodegen implements CodegenConfig {
 
     @Override
     public String toModelName(String name) {
-        final String modelName = camelize(name);
-        return defaultIncludes.contains(modelName) ? modelName + "_" : modelName;
+        String modelName = camelize(name);
+
+        if (defaultIncludes.contains(modelName))
+            modelName = modelName + "_";
+
+        // model name starts with a number
+        if (modelName.matches("^\\d.*")) {
+            LOGGER.warn(modelName + " (starting with a number) cannot be used as a model name. Prefixed with Type",
+                    true);
+            modelName = "Type" + modelName;
+        }
+
+        return modelName;
     }
 
     @Override

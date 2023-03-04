@@ -87,6 +87,38 @@ public class ElmClientCodegenTest {
         Assert.assertEquals(postProcessed.get("includeTime"), true);
     }
 
+    @Test(description = "operations starting with numbers are prefixed correctly")
+    public void operationsStartingWithNumbersArePrefixedCorrectly() throws Exception {
+        final ElmClientCodegen codegen = new ElmClientCodegen();
+
+        String operationId = codegen.toOperationId("200Response");
+        Assert.assertEquals(operationId, "call200response");
+    }
+
+    @Test(description = "type starting with number is prefixed correctly")
+    public void typeStartingWithNumbersArePrefixedCorrectly() throws Exception {
+        final ElmClientCodegen codegen = new ElmClientCodegen();
+
+        String modelName = codegen.toModelName("200Response");
+        Assert.assertEquals(modelName, "Type200Response");
+    }
+
+    @Test(description = "type with same name as default include is suffixed")
+    public void typeWithSameNameAsDefaultIncludeIsSuffixed() throws Exception {
+        final ElmClientCodegen codegen = new ElmClientCodegen();
+
+        String modelName = codegen.toModelName("List");
+        Assert.assertEquals(modelName, "List_");
+    }
+
+    @Test(description = "type with invalid characters are escaped")
+    public void typeWithInvalidCharactersAreEscaped() throws Exception {
+        final ElmClientCodegen codegen = new ElmClientCodegen();
+
+        String typeName = codegen.toModelName("EnumArraysJustSymbol&gt;&#x3D;");
+        Assert.assertEquals(typeName, "EnumArraysJustSymbol");
+    }
+
     // HELPERS
     private static <TSchema extends Schema> Schema[] recursiveListOfType(TSchema type, int levelsOfRecursion) {
         final List<Schema> output = new ArrayList<Schema>();
