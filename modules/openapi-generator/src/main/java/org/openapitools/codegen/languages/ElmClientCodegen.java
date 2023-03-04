@@ -137,6 +137,7 @@ public class ElmClientCodegen extends DefaultCodegen implements CodegenConfig {
         typeMapping.put("integer", "Int");
         typeMapping.put("long", "Int");
         typeMapping.put("number", "Float");
+        typeMapping.put("decimal", "Float");
         typeMapping.put("float", "Float");
         typeMapping.put("double", "Float");
         typeMapping.put("boolean", "Bool");
