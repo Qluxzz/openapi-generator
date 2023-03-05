@@ -199,8 +199,9 @@ public class ElmClientCodegen extends DefaultCodegen implements CodegenConfig {
         }
 
         // operationId starts with a number
-        if (operationId.matches("^\\d.*")) {
-            LOGGER.warn(operationId + " (starting with a number) cannot be used as method sname. Renamed to " + camelize("call_" + operationId), true);
+        if (startsWithANumber(operationId)) {
+            LOGGER.warn(operationId + " (starting with a number) cannot be used as method sname. Prefixed with _call",
+                    true);
             operationId = camelize("call_" + operationId, LOWERCASE_FIRST_LETTER);
         }
 
@@ -223,7 +224,7 @@ public class ElmClientCodegen extends DefaultCodegen implements CodegenConfig {
             modelName = modelName + "_";
 
         // model name starts with a number
-        if (modelName.matches("^\\d.*")) {
+        if (startsWithANumber(modelName)) {
             LOGGER.warn(modelName + " (starting with a number) cannot be used as a model name. Prefixed with Type",
                     true);
             modelName = "Type" + modelName;
@@ -239,15 +240,26 @@ public class ElmClientCodegen extends DefaultCodegen implements CodegenConfig {
 
     @Override
     public String toVarName(String name) {
-        final String varName = camelize(name.replaceAll("[^a-zA-Z0-9_]", ""), LOWERCASE_FIRST_LETTER);
-        return isReservedWord(varName) ? escapeReservedWord(name) : varName;
+        name = camelize(name.replaceAll("[^a-zA-Z0-9_]", ""), LOWERCASE_FIRST_LETTER);
+        if (startsWithANumber(name)) {
+            name = "f" + name;
+        }
+
+        return isReservedWord(name) ? escapeReservedWord(name) : name;
+    }
+
+    private boolean startsWithANumber(String name) {
+        return name.matches("^\\d.*");
     }
 
     @Override
     public String toEnumVarName(String value, String datatype) {
-        String camelized = camelize(value.replace(" ", "_").replace("(", "_").replace(")", "")); // TODO FIXME escape properly
+        String camelized = camelize(value.replace(" ", "_").replace("(", "_").replace(")", "")); // TODO FIXME escape
+                                                                                                 // properly
         if (camelized.length() == 0) {
-            LOGGER.error("Unable to determine enum variable name (name: {}, datatype: {}) from empty string. Default to UnknownEnumVariableName", value, datatype);
+            LOGGER.error(
+                    "Unable to determine enum variable name (name: {}, datatype: {}) from empty string. Default to UnknownEnumVariableName",
+                    value, datatype);
             camelized = "UnknownEnumVariableName";
         }
         return camelized;
