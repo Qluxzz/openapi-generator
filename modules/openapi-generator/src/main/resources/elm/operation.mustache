@@ -48,11 +48,11 @@ import Uuid exposing (Uuid){{/includeUuid}}
     {{#responses}} {{!-- This iterates through all different responses, some might not be 200 }}
         {{#is2xx}}
             {{^dataType}}(){{/dataType}} {{!-- If no return type, set return type as unit }}
-            {{#isMap}}(Dict.Dict String {{dataType}} {{/isMap}}
+            {{#isMap}}(Dict.Dict String {{/isMap}}
             {{#isArray}}
-                (List {{#items}}{{#isModel}}Api.Data.{{dataType}}{{/isModel}}{{/items}} {{!-- Api.Data is repeated here and down below }}
+                (List {{#items}}{{#isModel}}Api.Data.{{/isModel}}{{/items}} {{!-- Api.Data is repeated here and down below }}
             {{/isArray}}
-            {{^isArray}}{{^primitiveType}}{{^isUuid}}Api.Data.{{dataType}}{{/isUuid}}{{/primitiveType}}{{/isArray}}
+            {{^isArray}}{{^primitiveType}}{{^isUuid}}Api.Data.{{/isUuid}}{{/primitiveType}}{{/isArray}}{{dataType}}
             {{#isArray}}){{/isArray}} {{!-- Need to close nesting, might be better to make a handlebars helper for nested types }}
             {{#isMap}}){{/isMap}}
         {{/is2xx}}
