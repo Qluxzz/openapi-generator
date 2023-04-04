@@ -247,8 +247,8 @@ encodePetPairs model =
             [ maybeEncode "id" Json.Encode.int model.id
             , maybeEncode "category" encodeCategory model.category
             , encode "name" Json.Encode.string model.name
-            , encode "photoUrls" Json.Encode.list Json.Encode.string model.photoUrls
-            , maybeEncode "tags" Json.Encode.list Api.Data.encodeTag model.tags
+            , encode "photoUrls" (Json.Encode.list Json.Encode.string) model.photoUrls
+            , maybeEncode "tags" (Json.Encode.list encodeTag) model.tags
             , maybeEncode "status" encodePetStatus model.status
             ]
     in
