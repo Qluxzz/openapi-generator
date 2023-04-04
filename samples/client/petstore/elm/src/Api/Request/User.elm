@@ -32,7 +32,6 @@ import Json.Decode
 import Json.Encode
 
 
-
 {-| This can only be done by the logged in user.
 -}
 createUser : Api.Data.User -> Api.Request ()
@@ -44,8 +43,7 @@ createUser body_body =
         []
         []
         (Just (Api.Data.encodeUser body_body))
-        
-
+        (Json.Decode.succeed ())
 
 
 createUsersWithArrayInput : List Api.Data.User -> Api.Request ()
@@ -56,9 +54,8 @@ createUsersWithArrayInput body_body =
         []
         []
         []
-        (Just ((Json.Encode.list encodeUser) body_body))
-        
-
+        (Just (Json.Encode.list Api.Data.encodeUser body_body))
+        (Json.Decode.succeed ())
 
 
 createUsersWithListInput : List Api.Data.User -> Api.Request ()
@@ -69,9 +66,8 @@ createUsersWithListInput body_body =
         []
         []
         []
-        (Just ((Json.Encode.list encodeUser) body_body))
-        
-
+        (Just (Json.Encode.list Api.Data.encodeUser body_body))
+        (Json.Decode.succeed ())
 
 
 {-| This can only be done by the logged in user.
@@ -85,8 +81,7 @@ deleteUser username_path =
         []
         []
         Nothing
-        
-
+        (Json.Decode.succeed ())
 
 
 getUserByName : String -> Api.Request Api.Data.User
@@ -101,7 +96,6 @@ getUserByName username_path =
         Api.Data.userDecoder
 
 
-
 loginUser : String -> String -> Api.Request
 loginUser username_query password_query =
     Api.request
@@ -114,7 +108,6 @@ loginUser username_query password_query =
         Json.Decode.string
 
 
-
 logoutUser : Api.Request ()
 logoutUser =
     Api.request
@@ -124,8 +117,7 @@ logoutUser =
         []
         []
         Nothing
-        
-
+        (Json.Decode.succeed ())
 
 
 {-| This can only be done by the logged in user.
@@ -139,4 +131,4 @@ updateUser username_path body_body =
         []
         []
         (Just (Api.Data.encodeUser body_body))
-        
+        (Json.Decode.succeed ())

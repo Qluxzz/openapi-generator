@@ -70,6 +70,7 @@ addPet body_body =
         []
         []
         (Just (Api.Data.encodePet body_body))
+        (Json.Decode.succeed ())
 
 
 deletePet : Int -> Maybe String -> Api.Request ()
@@ -81,6 +82,7 @@ deletePet petId_path apiKey_header =
         []
         [ ( "api_key", Maybe.map identity apiKey_header ) ]
         Nothing
+        (Json.Decode.succeed ())
 
 
 {-| Multiple status values can be provided with comma separated strings
@@ -134,6 +136,7 @@ updatePet body_body =
         []
         []
         (Just (Api.Data.encodePet body_body))
+        (Json.Decode.succeed ())
 
 
 updatePetWithForm : Int -> Maybe String -> Maybe String -> Api.Request ()
@@ -145,6 +148,7 @@ updatePetWithForm petId_path name status =
         []
         []
         Nothing
+        (Json.Decode.succeed ())
 
 
 uploadFile : Int -> Maybe String -> Maybe String -> Api.Request Api.Data.ApiResponse

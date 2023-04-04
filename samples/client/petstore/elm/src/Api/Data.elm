@@ -16,20 +16,24 @@
 module Api.Data exposing
     ( ApiResponse
     , Category
-    , Order_, Order_Status(..), orderStatusVariants
-    , Pet, PetStatus(..), petStatusVariants
+    , Order_
+    , Order_Status(..)
+    , Pet
+    , PetStatus(..)
     , Tag
     , User
+    , apiResponseDecoder
+    , categoryDecoder
     , encodeApiResponse
     , encodeCategory
     , encodeOrder
     , encodePet
     , encodeTag
     , encodeUser
-    , apiResponseDecoder
-    , categoryDecoder
     , orderDecoder
+    , orderStatusVariants
     , petDecoder
+    , petStatusVariants
     , tagDecoder
     , userDecoder
     )
@@ -39,6 +43,7 @@ import Api.Time exposing (Posix)
 import Dict
 import Json.Decode
 import Json.Encode
+
 
 
 -- MODEL
@@ -93,8 +98,8 @@ type alias Pet =
     { id : Maybe Int
     , category : Maybe Category
     , name : String
-    , photoUrls : List (String)
-    , tags : Maybe (List (Tag))
+    , photoUrls : List String
+    , tags : Maybe (List Tag)
     , status : Maybe PetStatus
     }
 
@@ -135,6 +140,7 @@ type alias User =
     }
 
 
+
 -- ENCODER
 
 
@@ -144,7 +150,7 @@ encodeApiResponse =
 
 
 encodeApiResponseWithTag : ( String, String ) -> ApiResponse -> Json.Encode.Value
-encodeApiResponseWithTag (tagField, tag) model =
+encodeApiResponseWithTag ( tagField, tag ) model =
     encodeObject (encodeApiResponsePairs model ++ [ encode tagField Json.Encode.string tag ])
 
 
@@ -166,7 +172,7 @@ encodeCategory =
 
 
 encodeCategoryWithTag : ( String, String ) -> Category -> Json.Encode.Value
-encodeCategoryWithTag (tagField, tag) model =
+encodeCategoryWithTag ( tagField, tag ) model =
     encodeObject (encodeCategoryPairs model ++ [ encode tagField Json.Encode.string tag ])
 
 
@@ -187,7 +193,7 @@ encodeOrder =
 
 
 encodeOrderWithTag : ( String, String ) -> Order_ -> Json.Encode.Value
-encodeOrderWithTag (tagField, tag) model =
+encodeOrderWithTag ( tagField, tag ) model =
     encodeObject (encodeOrderPairs model ++ [ encode tagField Json.Encode.string tag ])
 
 
@@ -204,6 +210,7 @@ encodeOrderPairs model =
             ]
     in
     pairs
+
 
 stringFromOrder_Status : Order_Status -> String
 stringFromOrder_Status model =
@@ -223,14 +230,13 @@ encodeOrderStatus =
     Json.Encode.string << stringFromOrder_Status
 
 
-
 encodePet : Pet -> Json.Encode.Value
 encodePet =
     encodeObject << encodePetPairs
 
 
 encodePetWithTag : ( String, String ) -> Pet -> Json.Encode.Value
-encodePetWithTag (tagField, tag) model =
+encodePetWithTag ( tagField, tag ) model =
     encodeObject (encodePetPairs model ++ [ encode tagField Json.Encode.string tag ])
 
 
@@ -241,12 +247,13 @@ encodePetPairs model =
             [ maybeEncode "id" Json.Encode.int model.id
             , maybeEncode "category" encodeCategory model.category
             , encode "name" Json.Encode.string model.name
-            , encode "photoUrls" (Json.Encode.list Json.Encode.string) model.photoUrls
-            , maybeEncode "tags" (Json.Encode.list encodeTag) model.tags
+            , encode "photoUrls" Json.Encode.list Json.Encode.string model.photoUrls
+            , maybeEncode "tags" Json.Encode.list Api.Data.encodeTag model.tags
             , maybeEncode "status" encodePetStatus model.status
             ]
     in
     pairs
+
 
 stringFromPetStatus : PetStatus -> String
 stringFromPetStatus model =
@@ -266,14 +273,13 @@ encodePetStatus =
     Json.Encode.string << stringFromPetStatus
 
 
-
 encodeTag : Tag -> Json.Encode.Value
 encodeTag =
     encodeObject << encodeTagPairs
 
 
 encodeTagWithTag : ( String, String ) -> Tag -> Json.Encode.Value
-encodeTagWithTag (tagField, tag) model =
+encodeTagWithTag ( tagField, tag ) model =
     encodeObject (encodeTagPairs model ++ [ encode tagField Json.Encode.string tag ])
 
 
@@ -294,7 +300,7 @@ encodeUser =
 
 
 encodeUserWithTag : ( String, String ) -> User -> Json.Encode.Value
-encodeUserWithTag (tagField, tag) model =
+encodeUserWithTag ( tagField, tag ) model =
     encodeObject (encodeUserPairs model ++ [ encode tagField Json.Encode.string tag ])
 
 
@@ -313,6 +319,7 @@ encodeUserPairs model =
             ]
     in
     pairs
+
 
 
 -- DECODER
@@ -364,14 +371,13 @@ orderStatusDecoder =
             )
 
 
-
 petDecoder : Json.Decode.Decoder Pet
 petDecoder =
     Json.Decode.succeed Pet
         |> maybeDecode "id" Json.Decode.int Nothing
         |> maybeDecode "category" categoryDecoder Nothing
-        |> decode "name" Json.Decode.string 
-        |> decode "photoUrls" (Json.Decode.list Json.Decode.string) 
+        |> decode "name" Json.Decode.string
+        |> decode "photoUrls" (Json.Decode.list Json.Decode.string)
         |> maybeDecode "tags" (Json.Decode.list tagDecoder) Nothing
         |> maybeDecode "status" petStatusDecoder Nothing
 
@@ -396,7 +402,6 @@ petStatusDecoder =
             )
 
 
-
 tagDecoder : Json.Decode.Decoder Tag
 tagDecoder =
     Json.Decode.succeed Tag
@@ -415,7 +420,6 @@ userDecoder =
         |> maybeDecode "password" Json.Decode.string Nothing
         |> maybeDecode "phone" Json.Decode.string Nothing
         |> maybeDecode "userStatus" Json.Decode.int Nothing
-
 
 
 

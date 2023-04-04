@@ -28,7 +28,6 @@ import Json.Decode
 import Json.Encode
 
 
-
 {-| For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors
 -}
 deleteOrder : String -> Api.Request ()
@@ -40,13 +39,12 @@ deleteOrder orderId_path =
         []
         []
         Nothing
-        
-
+        (Json.Decode.succeed ())
 
 
 {-| Returns a map of status codes to quantities
 -}
-getInventory : Api.Request (Dict.Dict String )
+getInventory : Api.Request (Dict.Dict String)
 getInventory =
     Api.request
         "GET"
@@ -56,7 +54,6 @@ getInventory =
         []
         Nothing
         (Json.Decode.dict Json.Decode.int)
-
 
 
 {-| For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions
@@ -71,7 +68,6 @@ getOrderById orderId_path =
         []
         Nothing
         Api.Data.orderDecoder
-
 
 
 placeOrder : Api.Data.Order_ -> Api.Request Api.Data.Order_
