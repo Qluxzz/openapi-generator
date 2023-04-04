@@ -93,7 +93,7 @@ findPetsByStatus status_query =
         "GET"
         "/pet/findByStatus"
         []
-        [ ( "status", Just <| String.join "," << List.map stringFromStatus status_query ) ]
+        [ ( "status", Just <| String.join "," <| List.map stringFromStatus status_query ) ]
         []
         Nothing
         (Json.Decode.list Api.Data.petDecoder)
@@ -107,7 +107,7 @@ findPetsByTags tags_query =
         "GET"
         "/pet/findByTags"
         []
-        [ ( "tags", Just <| String.join "," << List.map identity tags_query ) ]
+        [ ( "tags", Just <| String.join "," <| List.map identity tags_query ) ]
         []
         Nothing
         (Json.Decode.list Api.Data.petDecoder)
