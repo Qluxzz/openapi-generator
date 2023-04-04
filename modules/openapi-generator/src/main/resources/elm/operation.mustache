@@ -28,7 +28,6 @@ import Uuid exposing (Uuid){{/includeUuid}}
 {{/operations}}
 {{#operations}}{{#operation}}
 
-
 {{#notes}}
 {-| {{{notes}}}
 -}
@@ -43,7 +42,7 @@ import Uuid exposing (Uuid){{/includeUuid}}
     {{^isModel}}{{^items.isModel}}{{dataType}}{{/items.isModel}}{{/isModel}}
     {{/datatypeWithEnum}}
     {{#isArray}}
-        {{^required}} ){{/required}} {{!-- Add ending nested around Maybe ( List String ), for example }}
+        {{^required}}){{/required}} {{!-- Add ending nested around Maybe (List String), for example }}
     {{/isArray}} -> {{/allParams}}
     {{#authMethods}}{{#isBasicBearer}}String -> {{/isBasicBearer}}{{/authMethods}}Api.Request
     {{#responses}} {{!-- This iterates through all different responses, some might not be 200 }}
@@ -71,6 +70,7 @@ import Uuid exposing (Uuid){{/includeUuid}}
         [{{#queryParams}} ( "{{baseName}}", {{#required}}Just <| {{/required}}{{^required}}Maybe.map {{/required}}{{>paramToString}} {{>paramName}} ){{#-last}} {{/-last}}{{^-last}},{{/-last}}{{/queryParams}}]
         [{{#headerParams}} ( "{{baseName}}", {{#required}}Just <| {{/required}}{{^required}}Maybe.map {{/required}}{{>paramToString}} {{>paramName}} ){{#-last}} {{/-last}}{{^-last}},{{/-last}}{{/headerParams}}]
         {{#bodyParam}}({{#required}}Just ({{/required}}{{^required}}Maybe.map {{/required}}{{#isModel}}Api.Data.{{/isModel}}{{>recordFieldValueEncoder}} {{>paramName}}{{#required}}){{/required}}){{/bodyParam}}{{^bodyParam}}Nothing{{/bodyParam}}
-        {{^responses}}(Json.Decode.succeed ()){{/responses}}{{#responses}}{{#is2xx}}{{^dataType}}(Json.Decode.succeed ()){{/dataType}}{{#dataType}}{{>recordFieldValueDecoder}}{{/dataType}}{{/is2xx}}{{/responses}}{{#authMethods}}{{#isBasicBearer}}
-        |> Api.withBearerToken auth_token{{/isBasicBearer}}{{/authMethods}}
+        {{#responses}}{{#-first}}{{#is2xx}}{{^dataType}}(Json.Decode.succeed ()){{/dataType}}{{#dataType}}{{>recordFieldValueDecoder}}{{/dataType}}{{/is2xx}}{{^is2xx}}(Json.Decode.succeed ()){{/is2xx}}{{/-first}}{{/responses}}
+        {{^responses}}(Json.Decode.succeed ()){{/responses}}
+        {{#authMethods}}{{#isBasicBearer}}|> Api.withBearerToken auth_token{{/isBasicBearer}}{{/authMethods}}
 {{/operation}}{{/operations}}
