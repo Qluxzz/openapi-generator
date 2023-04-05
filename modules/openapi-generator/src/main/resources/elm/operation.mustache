@@ -33,9 +33,7 @@ import Uuid exposing (Uuid){{/includeUuid}}
 -}
 {{/notes}}
 {{#lambda.removeWhitespace}}
-{{operationId}} : {{#allParams}}
-    {{>operationParameter}}
-    -> {{/allParams}}
+{{operationId}} : {{#allParams}}{{>operationParameter}} -> {{/allParams}}
     {{#authMethods}}{{#isBasicBearer}}String -> {{/isBasicBearer}}{{/authMethods}}Api.Request
     {{#responses}} {{!-- This iterates through all different responses, some might not be 200 }}
         {{#is2xx}}
