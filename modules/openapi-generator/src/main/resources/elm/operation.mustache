@@ -34,22 +34,14 @@ import Uuid exposing (Uuid){{/includeUuid}}
 {{/notes}}
 {{#lambda.removeWhitespace}}
 {{operationId}} : {{#allParams}}
-    {{^required}}Maybe {{/required}} {{!-- If not required, would want to put all these in a single object later }}
-    {{#isArray}}{{^required}}( {{/required}}List {{/isArray}}
-    {{datatypeWithEnum}}{{^datatypeWithEnum}}
-    {{#isModel}}Api.Data.{{dataType}}{{/isModel}} {{!-- If it's a model directly }}
-    {{#items.isModel}}Api.Data.{{dataType}}{{/items.isModel}} {{!-- If the list item is a model directly. TODO: Add recursive nesting here! }}
-    {{^isModel}}{{^items.isModel}}{{dataType}}{{/items.isModel}}{{/isModel}}
-    {{/datatypeWithEnum}}
-    {{#isArray}}
-        {{^required}}){{/required}} {{!-- Add ending nested around Maybe (List String), for example }}
-    {{/isArray}} -> {{/allParams}}
+    {{>operationParameter}}
+    -> {{/allParams}}
     {{#authMethods}}{{#isBasicBearer}}String -> {{/isBasicBearer}}{{/authMethods}}Api.Request
     {{#responses}} {{!-- This iterates through all different responses, some might not be 200 }}
         {{#is2xx}}
             {{^dataType}}(){{/dataType}} {{!-- If no return type, set return type as unit }}
             {{#isMap}}(Dict.Dict String {{/isMap}}
-            {{#isArray}}(List {{#items}}{{#isModel}}Api.Data.{{/isModel}}{{/items}}{{/isArray}}{{^isArray}}{{^primitiveType}}{{^isUuid}}Api.Data.{{/isUuid}}{{/primitiveType}}{{/isArray}}{{dataType}}{{#isArray}}){{/isArray}} {{!-- Need to close nesting, might be better to make a handlebars helper for nested types }}{{#isMap}}){{/isMap}}
+            {{#isArray}}(List {{#items}}{{#isModel}}Api.Data.{{/isModel}}{{/items}}{{/isArray}}{{^isArray}}{{^primitiveType}}{{^isUuid}}Api.Data.{{/isUuid}}{{/primitiveType}}{{/isArray}}{{dataType}}{{#isArray}}){{/isArray}}{{!-- Need to close nesting, might be better to make a handlebars helper for nested types }}{{#isMap}}){{/isMap}}
         {{/is2xx}}
         {{#-first}}{{^is2xx}}(){{/is2xx}}{{/-first}}
     {{/responses}}
