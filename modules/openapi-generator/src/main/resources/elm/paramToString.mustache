@@ -1,5 +1,5 @@
 {{#lambda.removeWhitespace}}
-{{#isArray}}String.join "," << List.map {{#items}}{{>paramToString}}{{/items}}{{/isArray}}
+{{#isArray}}(String.join "," << List.map {{#items}}{{>paramToString}}{{/items}}){{/isArray}}
 {{^isArray}}
     {{^isEnum}}
         {{^isUuid}}
