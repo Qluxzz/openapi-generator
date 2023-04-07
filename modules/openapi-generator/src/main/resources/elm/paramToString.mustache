@@ -16,7 +16,7 @@
     {{#isNumber}}String.fromFloat{{/isNumber}}
     {{#isFloat}}String.fromFloat{{/isFloat}}
     {{#isDouble}}String.fromFloat{{/isDouble}}
-    {{#isEnum}}stringFrom{{^paramName}}Api.Data.{{classname}}{{/paramName}}{{enumName}}{{/isEnum}}
+    {{#allowableValues}}Api.Data.stringFrom{{dataType}}{{/allowableValues}}
     {{#isUuid}}Uuid.toString{{/isUuid}}
 {{/isArray}}
 {{/lambda.removeWhitespace}}
