@@ -36,12 +36,14 @@ import Uuid exposing (Uuid){{/includeUuid}}
 {{operationId}} : {{#allParams}}{{>operationParameter}} -> {{/allParams}}
     {{#authMethods}}{{#isBasicBearer}}String -> {{/isBasicBearer}}{{/authMethods}}Api.Request
     {{#responses}} {{!-- This iterates through all different responses, some might not be 200 }}
-        {{#is2xx}}
-            {{^dataType}}(){{/dataType}} {{!-- If no return type, set return type as unit }}
-            {{#isMap}}(Dict.Dict String {{/isMap}}
-            {{#isArray}}(List {{#items}}{{#isModel}}Api.Data.{{/isModel}}{{/items}}{{/isArray}}{{^isArray}}{{^primitiveType}}{{^isUuid}}Api.Data.{{/isUuid}}{{/primitiveType}}{{/isArray}}{{dataType}}{{#isArray}}){{/isArray}}{{!-- Need to close nesting, might be better to make a handlebars helper for nested types }}{{#isMap}}){{/isMap}}
-        {{/is2xx}}
-        {{#-first}}{{^is2xx}}(){{/is2xx}}{{/-first}}
+        {{#-first}} {{!-- We have no way to handle multiple return types today so we just handle the first }}
+            {{#is2xx}}
+                {{^dataType}}(){{/dataType}}
+                {{#isMap}}(Dict.Dict String {{/isMap}}
+                {{#isArray}}(List {{#items}}{{#isModel}}Api.Data.{{/isModel}}{{/items}}{{/isArray}}{{^isArray}}{{^primitiveType}}{{^isUuid}}Api.Data.{{/isUuid}}{{/primitiveType}}{{/isArray}}{{dataType}}{{#isArray}}){{/isArray}}{{#isMap}}){{/isMap}}
+            {{/is2xx}}
+            {{^is2xx}}(){{/is2xx}}
+        {{/-first}}
     {{/responses}}
 {{/lambda.removeWhitespace}}
 
