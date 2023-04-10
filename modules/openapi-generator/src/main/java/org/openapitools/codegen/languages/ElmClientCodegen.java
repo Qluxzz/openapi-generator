@@ -397,6 +397,9 @@ public class ElmClientCodegen extends DefaultCodegen implements CodegenConfig {
                     response.isModel = !response.primitiveType;
                 }
             });
+            // an empty string is truthy so we explicitly set empty notes to null
+            if (op.notes != null && op.notes.isEmpty())
+                op.notes = null;
         });
 
         final boolean includeTime = anyOperationResponse(ops, response -> response.isDate || response.isDateTime) ||
