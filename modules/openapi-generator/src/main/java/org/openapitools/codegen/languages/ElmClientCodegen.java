@@ -392,6 +392,12 @@ public class ElmClientCodegen extends DefaultCodegen implements CodegenConfig {
         List<CodegenOperation> ops = objs.getOperation();
         ops.forEach(op -> {
             op.allParams = op.allParams.stream().sorted(new ParameterSorter()).collect(Collectors.toList());
+
+            op.allParams.forEach(param -> {
+                // Normalize param name
+                param.paramName = toVarName(param.paramName);
+            });
+
             op.responses.forEach(response -> {
                 if (response.isDefault) {
                     response.isModel = !response.primitiveType;
