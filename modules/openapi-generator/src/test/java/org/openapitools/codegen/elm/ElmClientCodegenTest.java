@@ -103,7 +103,7 @@ public class ElmClientCodegenTest {
     public void decimalIsConvertedToFloat() throws Exception {
         final ElmClientCodegen codegen = new ElmClientCodegen();
 
-        Schema schema = new Schema().addProperty("amount", new StringSchema().format("number"));
+        Schema schema = new Schema().addProperty("amount", new StringSchema().format("decimal"));
 
         OpenAPI openApi = TestUtils.createOpenAPIWithOneSchema("test", schema);
 
