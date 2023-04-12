@@ -254,15 +254,19 @@ public class ElmClientCodegen extends DefaultCodegen implements CodegenConfig {
 
     @Override
     public String toEnumVarName(String value, String datatype) {
-        String camelized = camelize(value.replace(" ", "_").replace("(", "_").replace(")", "")); // TODO FIXME escape
-                                                                                                 // properly
-        if (camelized.length() == 0) {
+        if (value.isEmpty()) {
             LOGGER.error(
-                    "Unable to determine enum variable name (name: {}, datatype: {}) from empty string. Default to UnknownEnumVariableName",
-                    value, datatype);
-            camelized = "UnknownEnumVariableName";
+                "Unable to determine enum variable name (name: {}, datatype: {}) from empty string. Default to UnknownEnumVariableName",
+                value, datatype);
+            return "UnknownEnumVariableName";
         }
-        return camelized;
+
+        // for symbol, e.g. $, #
+        if (getSymbolName(value) != null) {
+            return camelize(getSymbolName(value));
+        }
+
+        return camelize(value.replace(" ", "_").replace("(", "_").replace(")", ""));
     }
 
     @Override
