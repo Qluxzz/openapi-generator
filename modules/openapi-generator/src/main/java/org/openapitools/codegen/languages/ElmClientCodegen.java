@@ -152,6 +152,7 @@ public class ElmClientCodegen extends DefaultCodegen implements CodegenConfig {
         typeMapping.put("binary", "String");
         typeMapping.put("UUID", "Uuid");
         typeMapping.put("URI", "String");
+        typeMapping.put("object", "()"); // TODO: How to handle this?
 
         importMapping.clear();
 
