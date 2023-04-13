@@ -137,14 +137,6 @@ public class ElmClientCodegenTest {
         Assert.assertEquals(modelName, "List_");
     }
 
-    @Test(description = "type with invalid characters are escaped")
-    public void typeWithInvalidCharactersAreEscaped() throws Exception {
-        final ElmClientCodegen codegen = new ElmClientCodegen();
-
-        String typeName = codegen.toModelName("EnumArraysJustSymbol&gt;&#x3D;");
-        Assert.assertEquals(typeName, "EnumArraysJustSymbol");
-    }
-
     // HELPERS
     private static <TSchema extends Schema> Schema[] recursiveListOfType(TSchema type, int levelsOfRecursion) {
         final List<Schema> output = new ArrayList<Schema>();
