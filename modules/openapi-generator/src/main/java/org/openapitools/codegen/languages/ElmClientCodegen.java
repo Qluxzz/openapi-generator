@@ -23,6 +23,7 @@ import com.samskivert.mustache.Mustache.Lambda;
 import com.samskivert.mustache.Template;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.parser.util.SchemaTypeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.openapitools.codegen.*;
 import org.openapitools.codegen.meta.features.*;
@@ -51,6 +52,8 @@ public class ElmClientCodegen extends DefaultCodegen implements CodegenConfig {
 
     protected String packageName = "openapi";
     protected String packageVersion = "1.0.0";
+
+    protected boolean useSingleRequestParameter = false;
 
     public CodegenType getTag() {
         return CodegenType.CLIENT;
@@ -155,6 +158,7 @@ public class ElmClientCodegen extends DefaultCodegen implements CodegenConfig {
         importMapping.clear();
 
         cliOptions.clear();
+        this.cliOptions.add(new CliOption(CodegenConstants.USE_SINGLE_REQUEST_PARAMETER, CodegenConstants.USE_SINGLE_REQUEST_PARAMETER_DESC, SchemaTypeUtil.BOOLEAN_TYPE).defaultValue(Boolean.FALSE.toString()));
 
         apiTemplateFiles.put("operation.mustache", ".elm");
         modelTemplateFiles.put("model.mustache", ".elm");
@@ -163,6 +167,17 @@ public class ElmClientCodegen extends DefaultCodegen implements CodegenConfig {
         supportingFiles.add(new SupportingFile("elm.mustache", "", "elm.json"));
         supportingFiles.add(new SupportingFile("gitignore.mustache", "", ".gitignore"));
         supportingFiles.add(new SupportingFile("README.mustache", "", "README.md"));
+    }
+
+    @Override
+    public void processOpts() {
+        super.processOpts();
+
+        if (additionalProperties.containsKey(CodegenConstants.USE_SINGLE_REQUEST_PARAMETER)) {
+            System.out.println("WOW!!!");
+            this.useSingleRequestParameter = convertPropertyToBoolean(CodegenConstants.USE_SINGLE_REQUEST_PARAMETER);
+        }
+        writePropertyBack(CodegenConstants.USE_SINGLE_REQUEST_PARAMETER, this.useSingleRequestParameter);
     }
 
     @Override
@@ -377,6 +392,10 @@ public class ElmClientCodegen extends DefaultCodegen implements CodegenConfig {
             // So we don't print empty notes
             if (op.notes != null && op.notes.isEmpty())
                 op.notes = null;
+
+            if (useSingleRequestParameter &&!op.vendorExtensions.containsKey("x-group-parameters")) {
+                op.vendorExtensions.put("x-group-parameters", true);
+            }
         });
 
         final boolean includeTime = anyOperationResponse(ops, response -> response.isDate || response.isDateTime) ||

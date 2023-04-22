@@ -35,7 +35,15 @@ import File exposing (File){{/includeFile}}
 -}
 {{/notes}}
 {{#lambda.removeWhitespace}}
-{{operationId}} : {{#allParams}}{{>operationParameter}} -> {{/allParams}}
+{{operationId}} :
+{{^vendorExtensions.x-group-parameters}}
+{{#allParams}}{{>operationParameter}} -> {{/allParams}}
+{{/vendorExtensions.x-group-parameters}}
+{{#vendorExtensions.x-group-parameters}}
+{{#allParams.0}}
+{ {{#allParams}}{{^-first}}, {{/-first }}{{paramName}} : {{>operationParameter}}{{/allParams}} } ->
+{{/allParams.0}}
+{{/vendorExtensions.x-group-parameters}}
     {{#authMethods}}{{#isBasicBearer}}String -> {{/isBasicBearer}}{{/authMethods}}Api.Request
     {{#responses}} {{!-- This iterates through all different responses, some might not be 200 }}
         {{#-first}} {{!-- We have no way to handle multiple return types today so we just handle the first }}
@@ -49,11 +57,22 @@ import File exposing (File){{/includeFile}}
     {{/responses}}
 {{/lambda.removeWhitespace}}
 
-{{operationId}}{{#allParams}} {{>paramName}}{{/allParams}}{{#authMethods}}{{#isBasicBearer}} auth_token{{/isBasicBearer}}{{/authMethods}} =
+{{#lambda.removeWhitespace}}
+{{operationId}}
+{{#vendorExtensions.x-group-parameters}}
+{{#allParams.0}}
+{ {{#allParams}}{{>paramName}}{{^-last}}, {{/-last}}{{/allParams}} }
+{{/allParams.0}}
+{{/vendorExtensions.x-group-parameters}}
+{{^vendorExtensions.x-group-parameters}}
+{{#allParams}}{{>paramName}} {{/allParams}}
+{{/vendorExtensions.x-group-parameters}}
+{{/lambda.removeWhitespace}}
+{{#authMethods}}{{#isBasicBearer}} auth_token{{/isBasicBearer}}{{/authMethods}} =
     Api.request
         "{{httpMethod}}"
         "{{path}}"
-        [{{#pathParams}} ( "{{paramName}}", {{>paramToString}} {{>paramName}} ){{#-last}} {{/-last}}{{^-last}},{{/-last}}{{/pathParams}}]
+        [{{#pathParams}} ( "{{baseName}}", {{>paramToString}} {{>paramName}} ){{#-last}} {{/-last}}{{^-last}},{{/-last}}{{/pathParams}}]
         [{{#queryParams}} ( "{{baseName}}", {{#required}}Just <| {{/required}}{{^required}}Maybe.map {{/required}}{{>paramToString}} {{>paramName}} ){{#-last}} {{/-last}}{{^-last}},{{/-last}}{{/queryParams}}]
         [{{#headerParams}} ( "{{baseName}}", {{#required}}Just <| {{/required}}{{^required}}Maybe.map {{/required}}{{>paramToString}} {{>paramName}} ){{#-last}} {{/-last}}{{^-last}},{{/-last}}{{/headerParams}}]
         {{#bodyParam}}
