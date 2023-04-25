@@ -41,7 +41,7 @@ import File exposing (File){{/includeFile}}
 {{/vendorExtensions.x-group-parameters}}
 {{#vendorExtensions.x-group-parameters}}
 {{#allParams.0}}
-{ {{#allParams}}{{^-first}}, {{/-first }}{{paramName}} : {{>operationParameter}}{{/allParams}} } ->
+{ {{#allParams}}{{^-first}}, {{/-first }}{{>paramName}} : {{>operationParameter}}{{/allParams}} } ->
 {{/allParams.0}}
 {{/vendorExtensions.x-group-parameters}}
     {{#authMethods}}{{#isBasicBearer}}String -> {{/isBasicBearer}}{{/authMethods}}Api.Request
