@@ -35,6 +35,20 @@ import File exposing (File){{/includeFile}}
 type alias {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options =
     { {{#allParams}}{{^-first}}, {{/-first }}{{>paramName}} : {{^required}}Maybe {{/required}}{{>operationParameter}}{{/allParams}} }
 
+{{! Helper function to create options with all non required fields set to Nothing }}
+default{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options : {{#allParams}}{{#required}}{{>operationParameter}} -> {{/required}}{{/allParams}}{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options
+default{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options {{#allParams}}{{#required}}{{>paramName}}{{^-last}} {{/-last}}{{/required}}{{/allParams}} =
+    { {{#allParams}}{{#required}}{{>paramName}} = {{>paramName}}{{^-last}}, {{/-last}}{{/required}}{{/allParams}}{{#allParams}}{{^required}}{{>paramName}} = Nothing {{^-last}}, {{/-last}}{{/required}}{{/allParams}} }
+
+{{#allParams}}
+{{^required}}
+with{{#lambda.titlecase}}{{>paramName}}{{/lambda.titlecase}} : {{>operationParameter}} -> {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options -> {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options
+with{{#lambda.titlecase}}{{>paramName}}{{/lambda.titlecase}} {{>paramName}} options =
+    { options | {{>paramName}} = Just {{>paramName}} }
+
+
+{{/required}}
+{{/allParams}}
 {{/allParams.0}}
 {{/vendorExtensions.x-group-parameters}}
 
