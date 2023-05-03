@@ -37,7 +37,7 @@ import File exposing (File){{/includeFile}}
 {{#lambda.removeWhitespace}}
 {{operationId}} :
 {{^vendorExtensions.x-group-parameters}}
-{{#allParams}}{{>operationParameter}} -> {{/allParams}}
+{{#allParams}}{{^required}}Maybe {{/required}}{{>operationParameter}} -> {{/allParams}}
 {{/vendorExtensions.x-group-parameters}}
 {{#vendorExtensions.x-group-parameters}}
 {{#allParams.0}}
