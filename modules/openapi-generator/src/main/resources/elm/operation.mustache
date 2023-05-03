@@ -30,6 +30,14 @@ import File exposing (File){{/includeFile}}
 {{#operations}}
 {{#operation}}
 
+{{#vendorExtensions.x-group-parameters}}
+{{#allParams.0}}
+type alias {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options =
+    { {{#allParams}}{{^-first}}, {{/-first }}{{>paramName}} : {{^required}}Maybe {{/required}}{{>operationParameter}}{{/allParams}} }
+
+{{/allParams.0}}
+{{/vendorExtensions.x-group-parameters}}
+
 {{#notes}}
 {-| {{{notes}}}
 -}
@@ -41,7 +49,7 @@ import File exposing (File){{/includeFile}}
 {{/vendorExtensions.x-group-parameters}}
 {{#vendorExtensions.x-group-parameters}}
 {{#allParams.0}}
-{ {{#allParams}}{{^-first}}, {{/-first }}{{>paramName}} : {{>operationParameter}}{{/allParams}} } ->
+{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options ->
 {{/allParams.0}}
 {{/vendorExtensions.x-group-parameters}}
     {{#authMethods}}{{#isBasicBearer}}String -> {{/isBasicBearer}}{{/authMethods}}Api.Request
