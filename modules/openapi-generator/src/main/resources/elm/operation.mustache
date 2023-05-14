@@ -1,7 +1,7 @@
 {{>licenseInfo}}
 
 module Api.Request.{{classname}} exposing
-{{#operations}}{{#operation}}    {{#-first}}( {{/-first}}{{^-first}}, {{/-first}}{{operationId}}{{#allParams}}{{#isEnum}}, {{enumName}}(..), {{#lambda.camelcase}}{{enumName}}{{/lambda.camelcase}}Variants{{/isEnum}}{{/allParams}}
+{{#operations}}{{#operation}}    {{#-first}}( {{/-first}}{{^-first}}, {{/-first}}{{operationId}}{{#vendorExtensions.x-group-parameters}}{{#allParams.1}}, {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}DefaultOptions{{/allParams.1}}{{/vendorExtensions.x-group-parameters}}{{#allParams}}{{#isEnum}}, {{enumName}}(..), {{#lambda.camelcase}}{{enumName}}{{/lambda.camelcase}}Variants{{/isEnum}}{{/allParams}}
 {{/operation}}{{/operations}}    )
 
 import Api
@@ -31,25 +31,17 @@ import File exposing (File){{/includeFile}}
 {{#operation}}
 
 {{#vendorExtensions.x-group-parameters}}
-{{#allParams.0}}
+{{#allParams.1}}
 type alias {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options =
     { {{#allParams}}{{^-first}}, {{/-first }}{{>paramName}} : {{^required}}Maybe {{/required}}{{>operationParameter}}{{/allParams}} }
 
+
 {{! Helper function to create options with all non required fields set to Nothing }}
-default{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options : {{#allParams}}{{#required}}{{>operationParameter}} -> {{/required}}{{/allParams}}{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options
-default{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options {{#allParams}}{{#required}}{{>paramName}}{{^-last}} {{/-last}}{{/required}}{{/allParams}} =
-    { {{#allParams}}{{#required}}{{>paramName}} = {{>paramName}}{{^-last}}, {{/-last}}{{/required}}{{/allParams}}{{#allParams}}{{^required}}{{>paramName}} = Nothing {{^-last}}, {{/-last}}{{/required}}{{/allParams}} }
+{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}DefaultOptions : {{#allParams}}{{#required}}{{>operationParameter}} -> {{/required}}{{/allParams}}{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options
+{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}DefaultOptions {{#allParams}}{{#required}}{{>paramName}}{{^-last}} {{/-last}}{{/required}}{{/allParams}} =
+    { {{#allParams}}{{#required}}{{>paramName}} = {{>paramName}}{{^-last}}, {{/-last}}{{/required}}{{/allParams}}{{#allParams}}{{^required}}{{>paramName}} = Nothing{{^-last}}, {{/-last}}{{/required}}{{/allParams}} }
 
-{{#allParams}}
-{{^required}}
-with{{#lambda.titlecase}}{{>paramName}}{{/lambda.titlecase}} : {{>operationParameter}} -> {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options -> {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options
-with{{#lambda.titlecase}}{{>paramName}}{{/lambda.titlecase}} {{>paramName}} options =
-    { options | {{>paramName}} = Just {{>paramName}} }
-
-
-{{/required}}
-{{/allParams}}
-{{/allParams.0}}
+{{/allParams.1}}
 {{/vendorExtensions.x-group-parameters}}
 
 {{#notes}}
@@ -62,9 +54,12 @@ with{{#lambda.titlecase}}{{>paramName}}{{/lambda.titlecase}} {{>paramName}} opti
 {{#allParams}}{{^required}}Maybe {{/required}}{{>operationParameter}} -> {{/allParams}}
 {{/vendorExtensions.x-group-parameters}}
 {{#vendorExtensions.x-group-parameters}}
-{{#allParams.0}}
+{{^allParams.1}}
+{{#allParams}}{{^required}}Maybe {{/required}}{{>operationParameter}} -> {{/allParams}}
+{{/allParams.1}}
+{{#allParams.1}}
 {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Options ->
-{{/allParams.0}}
+{{/allParams.1}}
 {{/vendorExtensions.x-group-parameters}}
     {{#authMethods}}{{#isBasicBearer}}String -> {{/isBasicBearer}}{{/authMethods}}Api.Request
     {{#responses}} {{!-- This iterates through all different responses, some might not be 200 }}
@@ -82,9 +77,12 @@ with{{#lambda.titlecase}}{{>paramName}}{{/lambda.titlecase}} {{>paramName}} opti
 {{#lambda.removeWhitespace}}
 {{operationId}}
 {{#vendorExtensions.x-group-parameters}}
-{{#allParams.0}}
+{{#allParams.1}}
 { {{#allParams}}{{>paramName}}{{^-last}}, {{/-last}}{{/allParams}} }
-{{/allParams.0}}
+{{/allParams.1}}
+{{^allParams.1}}
+{{#allParams}}{{>paramName}} {{/allParams}}
+{{/allParams.1}}
 {{/vendorExtensions.x-group-parameters}}
 {{^vendorExtensions.x-group-parameters}}
 {{#allParams}}{{>paramName}} {{/allParams}}
